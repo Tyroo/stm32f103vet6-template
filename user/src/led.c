@@ -1,3 +1,4 @@
+/** 板载LED灯模块 **/
 #include "led.h"
 
 
@@ -6,7 +7,7 @@ void Led_Init() {
 	
 	GPIO_InitTypeDef GPIO_InitStructre;										// 定义一个GPIO结构体
 	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);	// 使能PB端口时钟
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);	// 使能PC端口时钟
 	
 	GPIO_InitStructre.GPIO_Pin = GPIO_Pin_7;							// PB7口启用
 	GPIO_InitStructre.GPIO_Mode = GPIO_Mode_Out_PP; 			// 推挽输出
@@ -23,13 +24,8 @@ void Led_Init() {
 void Led_Set(int State) {
 	
 	if (State&1) {
-		
 		GPIO_SetBits(GPIOC, GPIO_Pin_7);		// 使PC7 IO口输出高电平
-		
 	} else {
-		
 		GPIO_ResetBits(GPIOC, GPIO_Pin_7);	// 使PC7 IO口输出低电平
-		
 	} 
-	
 }

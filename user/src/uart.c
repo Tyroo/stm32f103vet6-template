@@ -1,3 +1,4 @@
+/** USART收发数据模块 **/
 #include <string.h>
 #include "uart.h"
 #include "nvic.h"
@@ -14,8 +15,9 @@ void Uart1_Init(int Baud) {
 	GPIO_InitTypeDef	GPIO_InitStructre;														// 定义一个GPIO 配置结构体
 	
 	/* 时钟配置 */
-	// 使能GPIOA端口时钟，使能UART1端口时钟
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_USART1, ENABLE);
+	
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | 
+	 RCC_APB2Periph_USART1, ENABLE);                                // 使能GPIOA端口时钟，使能UART1端口时钟
 	
 	/* GPIOA9 IO口复用USART1配置 */
 	GPIO_InitStructre.GPIO_Pin = GPIO_Pin_9;												// 配置引脚为PA9
@@ -53,10 +55,8 @@ void Uart1_Send(char *Data) {
 	
 	// 当发送字符遇到\0时停止发送
 	while (*Data != '\0') {
-		
 		while(!USART_GetFlagStatus(USART1, USART_FLAG_TXE));
 		USART_SendData(USART1, *(Data++));		// 调用USART_SendData发送单个字符
-		
 	}
 	
 }
@@ -65,14 +65,13 @@ void Uart1_Send(char *Data) {
 // USART1接收数据<中断函数>
 void USART1_IRQHandler() {
 	
-	char RxData;														// 定义一个接收单个字符的变量
-	static int DataBit = 0;												// 定义一个接收位
+	char RxData;																// 定义一个接收单个字符的变量
+	static int DataBit = 0;											// 定义一个接收位
 	
 	// 检查接收寄存器是否非空，非空为1，空为0
 	FlagStatus ReceiveFlag = USART_GetITStatus(USART1, USART_IT_RXNE);
 	
 	if (ReceiveFlag != RESET) {
-		
 		RxData = USART_ReceiveData(USART1);				// 获取接收到的数据
 		USART_SendData(USART1, RxData);
 

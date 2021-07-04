@@ -567,6 +567,26 @@
               <FileType>1</FileType>
               <FilePath>..\user\src\exti.c</FilePath>
             </File>
+            <File>
+              <FileName>wdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\wdg.c</FilePath>
+            </File>
+            <File>
+              <FileName>wdg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\wdg.h</FilePath>
+            </File>
+            <File>
+              <FileName>timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\timer.h</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\timer.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
