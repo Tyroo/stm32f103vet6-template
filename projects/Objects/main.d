@@ -32,3 +32,4 @@
 .\objects\main.o: ..\user\inc\nvic.h
 .\objects\main.o: ..\user\inc\uart.h
 .\objects\main.o: ..\user\inc\exti.h
+.\objects\main.o: ..\user\inc\timer.h

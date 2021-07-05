@@ -37,7 +37,7 @@ void Uart1_Init(int Baud) {
 	USART_InitStructre.USART_StopBits = USART_StopBits_1;						// 设置在传输帧结尾设置一个位的停止位
 	USART_InitStructre.USART_Parity = USART_Parity_No;							// 失能奇偶校验位
 	
-	USART_StructInit(&USART_InitStructre); 													// 将USART_InitStructre配置按缺省值填入
+	// USART_StructInit(&USART_InitStructre); 													// 将USART_InitStructre配置按缺省值填入
 	USART_Init(USART1, &USART_InitStructre);												// 初始化USART1配置
 	
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);									// 使能USART1的接收中断
