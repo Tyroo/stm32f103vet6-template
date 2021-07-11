@@ -28,7 +28,7 @@ void Wwdg_Inti(int CountValue, uint8_t WinValue,
 	WWDG_SetPrescaler(PrescalerValue);										// 设置WWDG分频系数
 	WWDG_SetWindowValue(WinValue);												// 设置窗口值
 	WWDG_EnableIT();																			// 使能WWDG中断，使得计数值到在复位之前先触发WWDG中断
-		
+
 	if (IsEnable&1) {
 		WWDG_Enable(CountValue);														// 设置计数器的值，并使能WWDG
 	} else {
