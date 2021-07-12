@@ -23,7 +23,7 @@ typedef struct FLASH_CONFIG {
 * 参数：void
 * 返回值：void
 **/
-void Flash_Init()
+void Flash_Init(void);
 	
 
 /**

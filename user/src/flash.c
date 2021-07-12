@@ -55,5 +55,5 @@ void Flash_Erase(u32 StartPageAddr, u16 PageNum) {
 
 // 读取指定地址的数据
 vu16 Flash_Read(u32 *Addr) {
-	return (vu16)(*Addr);
+	return *(vu16*)(Addr);
 }
