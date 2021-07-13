@@ -1,4 +1,4 @@
-/** 定时器模块 **/
+/** 定时器模块（TIM5未验证） **/
 #include "timer.h"
 #include "led.h"
 #include "nvic.h"

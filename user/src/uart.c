@@ -1,4 +1,4 @@
-/** USART收发数据模块 **/
+/** USART收发数据模块（验证通过） **/
 #include <string.h>
 #include "uart.h"
 #include "nvic.h"

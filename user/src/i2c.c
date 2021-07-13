@@ -1,4 +1,4 @@
-/* 软件IIC模块 */
+/* 软件IIC模块（未验证） */
 #include "i2c.h"
 
 
@@ -26,11 +26,11 @@ void IIC_Start() {
 	
 	I2C_Mode_Tx();	// 设置I2C为发送模式
 	
-	SCL_H, SDA_H;		// 拉高SCL和SDA，准备发送起始信号
+	IIC_SCL = 1, IIC_SDA_OUT = 1;		// 拉高SCL和SDA，准备发送起始信号
 	// 延时4us
-	SDA_L;					// 在SCL高电平时，拉低SDA，发送起始信号
+	IIC_SDA_OUT = 0;					// 在SCL高电平时，拉低SDA，发送起始信号
 	// 延时4us
-	SCL_L;					// 将SCL拉低，准备发送数据
+	IIC_SCL = 0;					// 将SCL拉低，准备发送数据
 	
 }
 
@@ -40,10 +40,12 @@ void IIC_Stop() {
 	
 	I2C_Mode_Tx();	// 设置I2C为发送模式
 	
-	SCL_L, SDA_L;		// 拉高SCL，拉低SDA
-	// 延时4us
-	SCL_H, SDA_H;					// 拉高SDA，产生结束信号
-	// 延时4us
+	IIC_SCL = 0, IIC_SDA_OUT = 0;		// 拉高SCL，拉低SDA
+	
+	Delay_Us(4);
+	IIC_SCL = 1, IIC_SDA_OUT = 1;					// 拉高SDA，产生结束信号
+	
+	Delay_Us(4);
 }
 
 
@@ -52,13 +54,15 @@ void IIC_Ack(void){
 	
 	I2C_Mode_Tx();
 	
-	SCL_L;
+	IIC_SCL = 0;
 	
-	SDA_L;
-	// 延时2us
-	SCL_H;
-	// 延时2us
-	SCL_L;
+	IIC_SDA_OUT = 0;
+	
+	Delay_Us(2);
+	IIC_SCL = 1;
+	
+	Delay_Us(2);
+	IIC_SCL = 0;
 }
 
 
@@ -68,30 +72,63 @@ void IIC_NotAck(void){
 	
 	I2C_Mode_Tx();
 	
-	SCL_L;
+	IIC_SCL = 0;
 	
-	SDA_H;
-	// 延时2us
-	SCL_H;
-	// 延时2us
-	SCL_L;
+	IIC_SDA_OUT = 1;
+	
+	Delay_Us(2);
+	IIC_SCL = 1;
+	
+	Delay_Us(2);
+	IIC_SCL = 0;
 }
 
 
 // 发送8位数据
-void Send_Data_8Bit(u8 Data) {
+void Send_Data_Byte(u8 Data) {
 	
-	IIC_Start();	// 发送数据之前，发送一个起始信号
+	I2C_Mode_Tx();	// 将IIC设置为发送模式
+	
+	IIC_SCL = 0;		// 拉低SCL电平，准备发送第一帧数据
 	
 	for(int i=7;i>=0;i--) {
 		
-		if (Data&(1<<i)) SDA_H;
-		else SDA_L;
+		if (Data&(1<<i)) IIC_SDA_OUT = 1;
+		else IIC_SDA_OUT = 0;
 		
-		// 延时2us
-		SCL_H;
-		// 延时2us
-		SCL_L;
-		// 延时2us
+		Delay_Us(2);
+		IIC_SCL = 1;
+		
+		Delay_Us(2);
+		IIC_SCL = 0;
+		
+		Delay_Us(2);
+	}
+}
+
+
+// 接收8位数据
+void Read_Data_Byte(short IsAck) {
+	
+	static unsigned char RxData = 0;
+	short RxIndex;
+	
+	I2C_Mode_Rx();
+	
+	for (RxIndex=0;RxIndex<8;RxIndex++) {
+		
+		IIC_SCL = 0;
+		
+		Delay_Us(2);
+		IIC_SCL = 1;
+		
+		RxData <<= 1;
+		if (IIC_SDA_IN) RxData |= 0x01;
+	}
+	
+	if(!IsAck) {
+		IIC_NotAck();
+	} else {
+		IIC_Ack();
 	}
 }
