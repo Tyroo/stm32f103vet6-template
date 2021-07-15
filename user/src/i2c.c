@@ -1,6 +1,7 @@
 /* 软件IIC模块（未验证） */
 #include "i2c.h"
 
+u8 RxData[IIC_DATA_SIZE_MAX];															// 定义一个全局变量用来存储接收的字符串
 
 void IIC_Init() {
 	
@@ -38,7 +39,7 @@ void IIC_Start() {
 // 发送结束信号，SCK高电平下，SDA由低变高
 void IIC_Stop() {
 	
-	IIC_Mode_Tx();	// 设置I2C为发送模式
+	IIC_Mode_Tx();									// 设置I2C为发送模式
 	
 	IIC_SCL = 0, IIC_SDA_OUT = 0;		// 拉高SCL，拉低SDA
 	
@@ -49,7 +50,7 @@ void IIC_Stop() {
 }
 
 
-// 发送应答信号，发送完数据后发送一个低电平
+// 发送应答信号，接收完数据后将SDA拉高
 void IIC_SendAck(void){ 
 	
 	IIC_Mode_Tx();
@@ -66,7 +67,24 @@ void IIC_SendAck(void){
 }
 
 
-bool IIC_WaitAck(void) {
+// 不发送应答信号，接收完数据后将SDA拉低
+void IIC_NotAck(){ 
+	
+	IIC_Mode_Tx();
+	
+	IIC_SCL = 0;
+	
+	IIC_SDA_OUT = 1;
+	
+	Delay_Us(2);
+	IIC_SCL = 1;
+	
+	Delay_Us(2);
+	IIC_SCL = 0;
+}
+
+
+void IIC_WaitAck(bool *TimeoutFlag) {
 	
 	u8 TimeoutCount = 0;	// 从设备应答超时计数
 	
@@ -87,32 +105,16 @@ bool IIC_WaitAck(void) {
 		// 当接受应答等待时间超过250个时钟周期后视为通信失败
 		if(TimeoutCount>250) { 
 			IIC_Stop();	// 发送通信停止信号给从设备
-			return False;
+			*TimeoutFlag = False;
+			return;
 		}
 	}
 	
-	IIC_SCL = 0; //时钟输出 0 
+	IIC_SCL = 0; 		//时钟输出 0 
 	
-	return True; 
+	*TimeoutFlag = True;
+	return; 
 } 
-
-
-
-// 不发送应答信号，发送完数据后发送一个高电平
-void IIC_NotAck(void){ 
-	
-	IIC_Mode_Tx();
-	
-	IIC_SCL = 0;
-	
-	IIC_SDA_OUT = 1;
-	
-	Delay_Us(2);
-	IIC_SCL = 1;
-	
-	Delay_Us(2);
-	IIC_SCL = 0;
-}
 
 
 // 发送8位数据
@@ -163,63 +165,73 @@ u8 IIC_Read_Byte(short IsAck) {
 		IIC_SendAck();
 	}
 	
-	return RxData
+	return RxData;
 }
 
 
 // 发送一个字符串给从设备
-bool IIC_Send_String(u8 *Str, u8 Addr) {
+bool IIC_Send_String(char *Str, u8 DeviceAddr, u16 RegisterAddr) {
 	
-	bool WaitSignal;						// 应答标志位
+	bool WaitAckFlag;											// 应答标志位
 	
-	IIC_Start();								// 发送IIC起始信号
+	// 当接收的数据超出最大限制或者设备地址超过127时，发送失败
+	if (strlen(Str)>IIC_DATA_SIZE_MAX ||
+		DeviceAddr>127) return False;
 	
-	WaitSignal = IIC_WaitAck();	// 获取应答信号
+	IIC_Start();													// 发送IIC起始信号
 	
-	if (WaitSignal == False) {	// 当未获取应答信号时终止发送，发送失败
-		return False;
+	IIC_Send_Byte((DeviceAddr<<1)&0xfe);	// 发送设备地址
+	IIC_WaitAck(&WaitAckFlag);						// 等待应答
+	
+	IIC_Send_Byte(RegisterAddr>>8);				// 发送寄存器地址高位
+	IIC_WaitAck(&WaitAckFlag);						// 等待应答
+	
+	IIC_Send_Byte(RegisterAddr%256); 			// 发送寄存器低地址
+	IIC_WaitAck(&WaitAckFlag); 						// 等待应答
+	
+	// 当遇到结束字符或者应答失效后停止发送
+	while(*Str != '\n' && WaitAckFlag == True) {
+		IIC_Send_Byte(*Str++);							// 发送一个字符
+		IIC_WaitAck(&WaitAckFlag); 					// 等待应答
 	}
+		
+	IIC_Stop();														// 发送IIC结束信号
 	
-	IIC_Send_Byte(Addr>>8);				// 发送目标地址高位
-	IIC_WaitAck();							// 应答接收
-	
-	IIC_Send_Byte(Addr%256); 		// 发送低地址
-	IIC_WaitAck(); 							// 等待应答
-	
-	// 当遇到结束字符后停止发送
-	while(*Str != '\n')
-		IIC_Send_Byte(*Str++);		// 发送一个字符
-	
-	IIC_Stop();		// 发送IIC结束信号
-	
-	return True;
+	return WaitAckFlag;
 }
 
 
 // 接收一个字符串
-u8 IIC_ReadString(u16 Addr, u8 StrLen, u8 StartSignal) {
+void IIC_Read_String(u8 DeviceAddr, u16 RegisterAddr, u8 ReadLen) {
 	
-	static u8 RxData[IIC_DATA_SIZE_MAX];
-	u8 DataIndex = 0;
+	u8 DataIndex = 0;												// 接收数据索引
+	bool WaitAckFlag;												// 应答标志位
 	
-	if (StrLen>IIC_DATA_SIZE_MAX) return 0;
+	// 当接收的数据超出最大限制或者设备地址超过127时，退出接收
+	if (ReadLen>IIC_DATA_SIZE_MAX || 
+		DeviceAddr > 127) return;
 	
-	IIC_Start();										// 发送IIC起始信号
-	
-	while(DataIndex<StrLen) {
-	
-		IIC_WaitAck();
-		IIC_Send_Byte(Addr%256); 			//发送低地址
+	while(DataIndex<ReadLen && WaitAckFlag == True) {
 		
-		IIC_WaitAck(); 
-		IIC_Start(); 
+		IIC_Start();													// 发送IIC起始信号
 		
-		IIC_Send_Byte(StartSignal); 	//进入接收模式 
-		IIC_WaitAck();
+		IIC_Send_Byte((DeviceAddr<<1)|0x01); 	// 发送设备地址
+		IIC_WaitAck(&WaitAckFlag);
 		
-		RxData[DataIndex] = IIC_Read_Byte(8);
+		IIC_Start(); 													// 发送开始信号
 		
-		IIC_Stop();										// 停止发送
+		IIC_Send_Byte(RegisterAddr>>8); 			// 发送寄存器地址高位
+		IIC_WaitAck(&WaitAckFlag);
+		
+		IIC_Send_Byte((RegisterAddr++)%256); 	// 发送寄存器地址低位
+		IIC_WaitAck(&WaitAckFlag);
+		
+		// 接收数据存入数组, 接收最后一个字节后无需应答
+		RxData[DataIndex] = IIC_Read_Byte((DataIndex < ReadLen - 1));
+		
+		IIC_Stop();														// 停止发送
 		DataIndex++;
 	}
+	
+	RxData[DataIndex] = '\0';
 }

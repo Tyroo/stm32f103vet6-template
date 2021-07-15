@@ -5,6 +5,7 @@
 /**
 * @include
 **/
+#include <string.h>
 #include "gpio.h"
 #include "delay.h"
 #include "stm32f10x.h"
