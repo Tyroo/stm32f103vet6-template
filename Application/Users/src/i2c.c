@@ -28,9 +28,11 @@ void IIC_Start() {
 	IIC_Mode_Tx();	// 设置I2C为发送模式
 	
 	IIC_SCL = 1, IIC_SDA_OUT = 1;		// 拉高SCL和SDA，准备发送起始信号
-	// 延时4us
+	
+	Delay_Us(4);
 	IIC_SDA_OUT = 0;								// 在SCL高电平时，拉低SDA，发送起始信号
-	// 延时4us
+	
+	Delay_Us(4);
 	IIC_SCL = 0;										// 将SCL拉低，准备发送数据
 	
 }
