@@ -11,7 +11,7 @@
 /**
 * @variable
 **/
-extern char UsartReceiveData[100];
+extern char UsartReceiveData[50];
 
 
 
@@ -21,7 +21,7 @@ extern char UsartReceiveData[100];
 * 参数：{ Baud: UART的波特率 }
 * 返回值：void
 **/
-void Uart1_Init(int Baud);
+void Uart1_Init(u32 Baud);
 
 
 /**

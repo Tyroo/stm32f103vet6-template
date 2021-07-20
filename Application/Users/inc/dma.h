@@ -9,8 +9,14 @@
 
 
 /**
+* @variable
+**/
+
+
+
+/**
 * @function
-* 作用：初始化DMA1，通道2用作获取USART3的接收数据到指定内存
+* 作用：初始化DMA1，通道2将指定内存地址的数据传入USART1的发送缓存寄存器中
 * 参数：{ *Channel：DMA通道；ReceveAddr：数据目的地址；SendAddr：数据源地址；BuffSize：数据传输次数；}
 * 返回值：void
 **/

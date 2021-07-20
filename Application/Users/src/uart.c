@@ -2,13 +2,15 @@
 #include <string.h>
 #include "uart.h"
 #include "nvic.h"
+#include "dma.h"
 
 
 // USART1接收的数据
-char UsartReceiveData[100];
+char UsartReceiveData[50];
+
 
 // 初始化UART
-void Uart1_Init(int Baud) {
+void Uart1_Init(u32 Baud) {
 	
 	/* 配置结构体指针定义 */
 	USART_InitTypeDef USART_InitStructre;														// 定义一个USART配置结构体
@@ -36,13 +38,14 @@ void Uart1_Init(int Baud) {
 	USART_InitStructre.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	// 使能USART具备收发数据的功能	
 	USART_InitStructre.USART_StopBits = USART_StopBits_1;						// 设置在传输帧结尾设置一个位的停止位
 	USART_InitStructre.USART_Parity = USART_Parity_No;							// 失能奇偶校验位
+	USART_InitStructre.USART_HardwareFlowControl = 									// 无硬件数据流控制，不配置此位会出现接收不到数据
+	 USART_HardwareFlowControl_None; 	
 	
-	// USART_StructInit(&USART_InitStructre); 													// 将USART_InitStructre配置按缺省值填入
 	USART_Init(USART1, &USART_InitStructre);												// 初始化USART1配置
 	
+	/* 使能 */
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);									// 使能USART1的接收中断
-	
-	USART_Cmd(USART1,ENABLE);																				// 使能USART1串口
+	USART_Cmd(USART1, ENABLE); 																			// 使能串口
 	
 	/* NVIC配置 */
 	Nvic_Config(USART1_IRQn, 0, 0, 1);															// 抢占优先级为0，响应优先级为0，并使能
@@ -58,14 +61,13 @@ void Uart1_Send(char *Data) {
 		while(!USART_GetFlagStatus(USART1, USART_FLAG_TXE));
 		USART_SendData(USART1, *(Data++));		// 调用USART_SendData发送单个字符
 	}
-	
 }
 
 
 // USART1接收数据<中断函数>
 void USART1_IRQHandler() {
 	
-	char RxData;																// 定义一个接收单个字符的变量
+	u8 RxData;																// 定义一个接收单个字符的变量
 	static int DataBit = 0;											// 定义一个接收位
 	
 	// 检查接收寄存器是否非空，非空为1，空为0
@@ -73,7 +75,7 @@ void USART1_IRQHandler() {
 	
 	if (ReceiveFlag != RESET) {
 		RxData = USART_ReceiveData(USART1);				// 获取接收到的数据
-		USART_SendData(USART1, RxData);
+//		USART_SendData(USART1, RxData);
 
 		UsartReceiveData[DataBit++] = RxData;			// 将数据存入接收字符串中
 		
@@ -81,7 +83,6 @@ void USART1_IRQHandler() {
 		if (RxData == '\n') {
 			UsartReceiveData[DataBit] = '\0';
 			DataBit = 0;														// 清除接收位
-			return;																	// 退出中断函数
 		}
 	}
 }

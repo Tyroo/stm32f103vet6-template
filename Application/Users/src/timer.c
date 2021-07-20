@@ -3,6 +3,8 @@
 #include "led.h"
 #include "nvic.h"
 #include "uart.h"
+#include "dma.h"
+
 
 // 通用定时器2中断函数
 void Timer2_Init(uint16_t TimerCountValue, uint16_t PrescalerValue,
@@ -123,7 +125,6 @@ void TIM2_IRQHandler() {
 		
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update); //清除TIM2更新中断标志
 		Led_Set(~LedStatus);
-	
 	}
 }
 

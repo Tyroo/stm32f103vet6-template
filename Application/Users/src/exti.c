@@ -1,4 +1,4 @@
-/* 外部中断模块，管理所有的外部中断 */
+/* 外部中断模块，管理所有的外部中断（验证通过） */
 #include "exti.h"
 #include "nvic.h"
 #include "uart.h"

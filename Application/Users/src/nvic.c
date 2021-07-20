@@ -28,13 +28,13 @@ void Nvic_Init(int Group) {
 
 void Nvic_Config(int NvicName, int PrePriority, int SubPriority, int Cmd) {
 	
-	NVIC_InitTypeDef NVIC_InitStructre;																// 定义一个NVIC配置结构体
+	NVIC_InitTypeDef NVIC_InitStructre;																	// 定义一个NVIC配置结构体
 	
-	NVIC_InitStructre.NVIC_IRQChannel = NvicName;										// 指定中断源为USART1中断
+	NVIC_InitStructre.NVIC_IRQChannel = NvicName;												// 指定中断源名称
 	NVIC_InitStructre.NVIC_IRQChannelPreemptionPriority = PrePriority;	// 设置中断的抢占优先级
 	NVIC_InitStructre.NVIC_IRQChannelSubPriority = SubPriority; 				// 设置中断的响应优先级
-	NVIC_InitStructre.NVIC_IRQChannelCmd = Cmd? ENABLE : DISABLE;			// 是否使能中断，1使能，0失能
+	NVIC_InitStructre.NVIC_IRQChannelCmd = Cmd? ENABLE : DISABLE;				// 是否使能中断，1使能，0失能
 	
-	NVIC_Init(&NVIC_InitStructre);																				// 应用NVIC配置更改
+	NVIC_Init(&NVIC_InitStructre);																			// 应用NVIC配置更改
 	
 }
