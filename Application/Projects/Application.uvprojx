@@ -583,6 +583,26 @@
               <FileType>1</FileType>
               <FilePath>..\Users\src\wdg.c</FilePath>
             </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Users\src\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Users\inc\spi.h</FilePath>
+            </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Users\src\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Users\inc\adc.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

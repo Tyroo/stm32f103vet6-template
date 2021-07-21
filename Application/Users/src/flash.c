@@ -6,12 +6,12 @@
 
 FLASH_CONFIG Flash_Configure;	// 定义一个Flash配置结构体变量
 
+
 // 初始化Flash模块
 void Flash_Init() {
-	
 	Flash_Configure.START_ADDR = 0x00008000;	// 配置闪存起始地址
 	Flash_Configure.END_ADDR = 0x0807FFFF;		// 配置闪存结束地址
-	Flash_Configure.PAGE_SIZE = 2048;			// 配置闪存每页的容量
+	Flash_Configure.PAGE_SIZE = 2048;					// 配置闪存每页的容量（2k）
 }
 
 
@@ -24,7 +24,7 @@ void Flash_Write(u32 Addr, u16 *Data) {
   
   // 输入地址合法性校验
   if (Addr<Flash_Configure.START_ADDR ||
-  Addr - Flash_Configure.END_ADDR < DataSize) {
+		Addr - Flash_Configure.END_ADDR < DataSize) {
     return;
   }
   

@@ -29,9 +29,6 @@
 /**
 *	@typedef
 **/
-typedef enum {	// 类型重定义，BOOL类型
-	True = 1,
-	False = 0,
-} bool;
+typedef enum {	True = 1, False = 0 } bool;	// 类型重定义，BOOL类型
 
 #endif

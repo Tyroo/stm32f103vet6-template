@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "delay.h"
 #include "dma.h"
+#include "adc.h"
 
 
 int main() {
@@ -17,6 +18,7 @@ int main() {
 	Exti_Init();									// 初始化外部中断
 	Delay_Init();									// 初始化延时模块
 	Timer2_Init(9999, 7199, 1);		// 初始化TIM2模块
+	Adc1_Init();									// 初始化ADC1模块
 	
 	while(1) {
 		
