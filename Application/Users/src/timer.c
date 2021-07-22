@@ -9,6 +9,9 @@
 #include "adc.h"
 
 
+u8 Timer2_Flag = 0;
+
+
 // 通用定时器2中断函数
 void Timer2_Init(uint16_t TimerCountValue, uint16_t PrescalerValue,
 	int TimerClockDivision) {
@@ -121,8 +124,6 @@ void Timer5_Init(uint16_t TimerCountValue, uint16_t PrescalerValue,
 // 定时器2<中断函数>
 void TIM2_IRQHandler() {
 	
-	char ChipTemperateStr[50];
-	float ChipTemperate;
 	ITStatus UpdateFlag = TIM_GetITStatus(TIM2, TIM_IT_Update);
 	uint8_t  LedStatus = GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_7);
 	
@@ -130,11 +131,7 @@ void TIM2_IRQHandler() {
 		
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update); //清除TIM2更新中断标志
 		Led_Set(~LedStatus);
-		
-		ChipTemperate = Get_ChipTemperate(10);
-		
-		sprintf(ChipTemperateStr, "Chip Temperate：%.2f℃", ChipTemperate);
-		Uart1_Send(ChipTemperateStr);
+		Timer2_Flag = 1;
 	}
 }
 

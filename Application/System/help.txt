@@ -1,5 +1,6 @@
-cmsis -> 存放ARM CMSIS标准的M3内核接口文件（core_cm3.c、core_cm3.h）以及启动文件（startup_stm32f10x_hd.s）。
-lib -> 存放STM32F10x固件库库文件及源码文件。
+core -> 存放ARM CMSIS标准的M3内核接口文件（core_cm3.c、core_cm3.h）以及启动文件（startup_stm32f10x_hd.s）。
+slib -> 存放STM32F10x固件库库文件及源码文件。
+elib -> 存放外部三方库文件及源码文件
 
 stm32f10x.h -- 系统寄存器的定义和声明、包装内存操作。
 stm32f10x_conf.h -- 外设头文件可以依据需要适当注释。

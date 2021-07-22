@@ -8,6 +8,12 @@
 
 
 /**
+* @variable
+**/
+extern u8 Timer2_Flag;
+
+
+/**
 * @function
 * 作用：初始化定时器2，定时时间 = ((TimerCountValue + 1) * (PrescalerValue + 1)) * TimerClockDivision / 72000000
 * 参数：{ 

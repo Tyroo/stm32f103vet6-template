@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "stm32f10x.h"
 #include "led.h"
 #include "nvic.h"
@@ -7,6 +8,8 @@
 #include "delay.h"
 #include "dma.h"
 #include "adc.h"
+
+
 
 
 int main() {
@@ -20,8 +23,17 @@ int main() {
 	Timer2_Init(9999, 7199, 1);		// 初始化TIM2模块
 	Adc1_Init();									// 初始化ADC1模块
 	
+//	float ChipTemperate = 0;
+//	char ChipTemperateStr[] = "";
+	
 	while(1) {
 		
+		if (Timer2_Flag&1) {
+			Timer2_Flag = 0;
+//			ChipTemperate = Get_ChipTemperate(10);
+//			sprintf(ChipTemperateStr, "Chip Temperate：%.2f℃.\n", ChipTemperate);
+//			Uart1_Send(ChipTemperateStr);
+		}
 	}
 }
 
