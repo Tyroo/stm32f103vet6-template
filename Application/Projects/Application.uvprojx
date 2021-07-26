@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\System\slib\inc;..\System\core;..\System;..\Users\inc;..\System\elib\inc;..\System\elib</IncludePath>
+              <IncludePath>..\System\slib\inc;..\System\core;..\System;..\Users\inc;..\System\elib\inc;..\System\elib\src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -389,14 +389,14 @@
               <FilePath>..\System\core\core_cm3.c</FilePath>
             </File>
             <File>
-              <FileName>system_stm32f10x.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\System\system_stm32f10x.c</FilePath>
-            </File>
-            <File>
               <FileName>startup_stm32f10x_hd.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\System\core\startup_stm32f10x_hd.s</FilePath>
+            </File>
+            <File>
+              <FileName>system_stm32f10x.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\System\system_stm32f10x.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -529,9 +529,9 @@
           <GroupName>elib</GroupName>
           <Files>
             <File>
-              <FileName>IQmathLib.lib</FileName>
+              <FileName>IQmathLib-cm3.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\System\elib\IQmathLib.lib</FilePath>
+              <FilePath>..\System\elib\src\IQmathLib-cm3.lib</FilePath>
             </File>
           </Files>
         </Group>
