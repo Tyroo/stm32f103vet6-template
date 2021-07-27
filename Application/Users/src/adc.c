@@ -8,7 +8,7 @@ void Adc1_Init(FunctionalState IsConvMode, FunctionalState IsContinue,
 	
 	/* 配置结构体定义 */
 	ADC_InitTypeDef ADC_InitStructre;											// ADC配置结构体
-	GPIO_InitTypeDef GPIO_InitStructre;									// GPIO配置结构体
+	GPIO_InitTypeDef GPIO_InitStructre;									  // GPIO配置结构体
 	
 	/* 时钟配置 */
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_ADC1, ENABLE);	// 使能ADC时钟
@@ -31,19 +31,19 @@ void Adc1_Init(FunctionalState IsConvMode, FunctionalState IsContinue,
 		
 	// 配置ADC1规则通道的转换优先级为和采样时间
 	for (u8 CIndex=0;CIndex<ChannleArrLen;CIndex++) {
-		ADC_RegularChannelConfig(ADC1, ChannleArr[CIndex], CIndex, 
+		ADC_RegularChannelConfig(ADC1, (uint8_t)(*(ChannleArr+CIndex)), CIndex+1, 
 			ADC_SampleTime_239Cycles5);
 	}
+
+	/* 中断配置 */
+	Nvic_Config(ADC1_2_IRQn, 0, 2, 1);										// 配置ADC中断优先级并使能
 	
 	/* 初始化配置 */
 	ADC_Init(ADC1, &ADC_InitStructre);										// 应用ADC1的配置
 	
 	/* 使能/失能 */
-	ADC_Cmd(ADC1, ENABLE);																// 使能ADC1
 	ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);								// 使能ADC1的转换结束中断
-	
-	/* 中断配置 */
-	Nvic_Config(ADC1_2_IRQn, 0, 0, 1);										// 配置ADC中断优先级并使能
+	ADC_Cmd(ADC1, ENABLE);																// 使能ADC1
 	
 	/* 复位/校准ADC */
 	ADC_ResetCalibration(ADC1);														// 重设ADC1的校准寄存器
@@ -83,15 +83,18 @@ float Get_ChipTemperate(u8 ConvertNum) {
 // ADC1_2<中断函数>
 void ADC1_2_IRQHandler() {
 	
-	u16 ConvertValue;																						// 转换值
-	char* ConvertValueStr = "";
-	FlagStatus ConvertFlag = ADC_GetITStatus(ADC1, ADC_IT_EOC);	// 转换完成标志
+	float ConvertValue = 0;																		// 转换值
+	static char ConvertValueStr[] = "";
 	
 	// 当转换完成后进入
-	if (ConvertFlag&1) {
-		ConvertValue = ADC_GetConversionValue(ADC1);							// 获取规则通道转换的值
+	if (ADC_GetITStatus(ADC1, ADC_IT_EOC) == SET) {
 		
-		sprintf(ConvertValueStr, "Sin Value：%d\n", ConvertValue);
+		ConvertValue = (ADC_GetConversionValue(ADC1) * 3.3) / 4096;							// 获取规则通道转换的值
+		
+		sprintf(ConvertValueStr, "Sin Value：%.2f\n", ConvertValue);
 		Uart1_Send(ConvertValueStr);
+		
+		ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
+	
 	}
 }

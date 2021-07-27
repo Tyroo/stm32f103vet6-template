@@ -1,4 +1,4 @@
-/* DAC模块 */
+/* DAC模块（验证通过） */
 #include "dac.h"
 
 

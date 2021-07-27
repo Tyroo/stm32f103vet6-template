@@ -27,7 +27,7 @@ int main() {
 	Timer2_Init(9999, 7199, 1);		// 初始化TIM2模块
 	
 	// 初始化ADC1通道16
-	Adc1_Init(ENABLE, DISABLE, ADC1ChanneArray, 1);
+	Adc1_Init(DISABLE, DISABLE, ADC1ChanneArray, 1);
 	// 开启ADC1的通道16的转换
 	ADC_SoftwareStartConvCmd(ADC1, ENABLE);							
 	Dac_Init();										// 初始化DAC模块
@@ -48,8 +48,11 @@ int main() {
 //		}
 		
 		for(u8 Index=0;Index<DAC_CNT_RESOLUTION;Index++) {
-			Delay_Ms(10);
-			DAC_SetChannel1Data(DAC_Channel_1, *(Dac_CntArray + Index));	// 设置DAC计数值
+			Delay_Ms(100);
+			DAC_SetChannel1Data(DAC_Align_12b_R, *(Dac_CntArray + Index));	// 设置DAC计数值
+			Delay_Ms(100);
+			// 开启ADC1的通道16的转换
+			ADC_SoftwareStartConvCmd(ADC1, ENABLE);	
 		}
 		
 	}
