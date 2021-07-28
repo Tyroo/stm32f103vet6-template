@@ -13,4 +13,12 @@
 typedef void (*Goto_App)(void);
 
 
+/**
+* @function
+**/
+void MSR_MSP(u32 addr);
+
+void Sys_SoftReset(void);
+
+
 #endif
