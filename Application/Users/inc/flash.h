@@ -29,10 +29,10 @@ void Flash_Init(void);
 /**
 * @function
 * 作用：擦除Flash中一定页数的数据
-* 参数：{ Addr: 起始地址；*Data：要写入的数据 }
+* 参数：{ Addr: 起始地址；*Data：要写入的数据；DataSize: 写入数据的长度，单位为半字（16bit） }
 * 返回值：void
 **/
-void Flash_Write(u32 Addr, u16 *Data);
+void Flash_Write(u32 Addr, u16 *Data, u16 DataSize);
 
 
 /**

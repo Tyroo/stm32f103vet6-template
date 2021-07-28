@@ -32,7 +32,7 @@ void Flash_Init(void);
 * 参数：{ Addr: 起始地址；*Data：要写入的数据 }
 * 返回值：void
 **/
-void Flash_Write(u32 Addr, u16 *Data);
+void Flash_Write(u32 Addr, u16 *Data, u16 DataSize);
 
 
 /**
