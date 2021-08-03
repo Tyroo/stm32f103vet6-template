@@ -9,6 +9,7 @@
 #include "dma.h"
 #include "adc.h"
 #include "dac.h"
+#include "spi.h"
 
 
 
@@ -16,7 +17,8 @@
 int main() {
 	
 	/* 变量定义 */
-	uint8_t ADC1ChanneArray[1] = { 0x01 };
+//	uint8_t ADC1ChanneArray[1] = { 0x01 };
+	uint8_t  LedStatus;
 	
 	/* 初始化模块配置 */
 	Nvic_Init(2);									// 初始化NVIC模块，中断分组2
@@ -24,19 +26,19 @@ int main() {
 	Uart1_Init(115200);						// 初始化UART1模块
 	Exti_Init();									// 初始化外部中断
 	Delay_Init();									// 初始化延时模块
+	Spi1_Init();									// 初始化SPI1模块
 	Timer2_Init(9999, 7199, 1);		// 初始化TIM2模块
 	
-	// 初始化ADC1通道16
-	Adc1_Init(DISABLE, DISABLE, ADC1ChanneArray, 1);
-	// 开启ADC1的通道16的转换
-	ADC_SoftwareStartConvCmd(ADC1, ENABLE);							
-	Dac_Init();										// 初始化DAC模块
+//	// 初始化ADC1通道16
+//	Adc1_Init(DISABLE, DISABLE, ADC1ChanneArray, 1);
+//	// 开启ADC1的通道16的转换
+//	ADC_SoftwareStartConvCmd(ADC1, ENABLE);							
+//	Dac_Init();										// 初始化DAC模块
 	
-
 //	float ChipTemperate = 0;
 //	char ChipTemperateStr[] = "";
 	
-	int* Dac_CntArray = Dac_GenerCntArr_Sin();	// 生成DAC计数值数组
+//	int* Dac_CntArray = Dac_GenerCntArr_Sin();	// 生成DAC计数值数组
 	
 	while(1) {
 		
@@ -47,14 +49,19 @@ int main() {
 //			Uart1_Send(ChipTemperateStr);
 //		}
 		
-		for(u8 Index=0;Index<DAC_CNT_RESOLUTION;Index++) {
-			Delay_Ms(100);
-			DAC_SetChannel1Data(DAC_Align_12b_R, *(Dac_CntArray + Index));	// 设置DAC计数值
-			Delay_Ms(100);
-			// 开启ADC1的通道16的转换
-			ADC_SoftwareStartConvCmd(ADC1, ENABLE);	
-		}
+//		for(u8 Index=0;Index<DAC_CNT_RESOLUTION;Index++) {
+//			Delay_Ms(100);
+//			DAC_SetChannel1Data(DAC_Align_12b_R, *(Dac_CntArray + Index));	// 设置DAC计数值
+//			Delay_Ms(100);
+//			// 开启ADC1的通道16的转换
+//			ADC_SoftwareStartConvCmd(ADC1, ENABLE);	
+//		}
 		
+		if (Timer2_Flag&1) {
+			LedStatus = GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_7);
+			Led_Set(~LedStatus);
+			Timer2_Flag = 0;
+		}
 	}
 }
 

@@ -7,6 +7,8 @@
 /****************** @Include *******************/
 
 #include "stm32f10x.h"
+#include "uart.h"
+#include "nvic.h"
 
 /****************** @Variable ******************/
 
