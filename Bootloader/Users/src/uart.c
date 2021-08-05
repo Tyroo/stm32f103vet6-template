@@ -7,6 +7,9 @@
 // USART1接收的数据
 char UsartReceiveData[100];
 
+// 是否处在下载标志
+u8 IsDownload = 0;
+
 // 初始化UART
 void Uart1_Init(int Baud) {
 	
@@ -36,8 +39,10 @@ void Uart1_Init(int Baud) {
 	USART_InitStructre.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	// 使能USART具备收发数据的功能	
 	USART_InitStructre.USART_StopBits = USART_StopBits_1;						// 设置在传输帧结尾设置一个位的停止位
 	USART_InitStructre.USART_Parity = USART_Parity_No;							// 失能奇偶校验位
+	USART_InitStructre.USART_HardwareFlowControl = 									// 无硬件数据流控制，不配置此位会出现接收不到数据
+	 USART_HardwareFlowControl_None;
 	
-	// USART_StructInit(&USART_InitStructre); 													// 将USART_InitStructre配置按缺省值填入
+	// USART_StructInit(&USART_InitStructre); 											// 将USART_InitStructre配置按缺省值填入
 	USART_Init(USART1, &USART_InitStructre);												// 初始化USART1配置
 	
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);									// 使能USART1的接收中断
@@ -72,15 +77,18 @@ void USART1_IRQHandler() {
 	FlagStatus ReceiveFlag = USART_GetITStatus(USART1, USART_IT_RXNE);
 	
 	if (ReceiveFlag != RESET) {
+		
 		RxData = USART_ReceiveData(USART1);				// 获取接收到的数据
-		USART_SendData(USART1, RxData);
 
 		UsartReceiveData[DataBit++] = RxData;			// 将数据存入接收字符串中
+		
+		IsDownload = 1;	// 指示有数据开始下载进来
 		
 		// 当接收的数据遇到结尾字符时终止接收
 		if (RxData == '\n') {
 			UsartReceiveData[DataBit] = '\0';
 			DataBit = 0;														// 清除接收位
+			IsDownload = 0;													// 清除下载中标志位
 			return;																	// 退出中断函数
 		}
 	}

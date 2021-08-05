@@ -1,8 +1,15 @@
 /** 定时器模块（TIM5未验证） **/
+#include <string.h>
+#include <stdio.h>
 #include "timer.h"
 #include "led.h"
 #include "nvic.h"
 #include "uart.h"
+#include "dma.h"
+
+
+u8 Timer2_Flag = 0;
+
 
 // 通用定时器2中断函数
 void Timer2_Init(uint16_t TimerCountValue, uint16_t PrescalerValue,
@@ -117,13 +124,13 @@ void Timer5_Init(uint16_t TimerCountValue, uint16_t PrescalerValue,
 void TIM2_IRQHandler() {
 	
 	ITStatus UpdateFlag = TIM_GetITStatus(TIM2, TIM_IT_Update);
-	uint8_t  LedStatus = GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_7);
+//	uint8_t  LedStatus = GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_7);
 	
 	if (UpdateFlag != RESET) {
 		
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update); //清除TIM2更新中断标志
-		Led_Set(~LedStatus);
-	
+//		Led_Set(~LedStatus);
+		Timer2_Flag = 1;
 	}
 }
 

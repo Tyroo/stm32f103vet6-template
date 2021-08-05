@@ -13,6 +13,8 @@
 **/
 extern char UsartReceiveData[100];
 
+extern u8 IsDownload;
+
 
 
 /**

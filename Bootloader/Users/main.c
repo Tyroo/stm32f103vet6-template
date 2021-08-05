@@ -1,29 +1,40 @@
-#include "stm32f10x.h"
-#include "led.h"
-#include "nvic.h"
-#include "uart.h"
-#include "exti.h"
-#include "timer.h"
-#include "delay.h"
+#include "main.h"
+
+typedef void(*App_Fun_t)(void);
+
+App_Fun_t app_main;
 
 
 int main() {
 	
-	/* 初始化模块配置 */
-	Nvic_Init(2);									// 初始化NVIC模块，中断分组2
-	Uart1_Init(115200);						// 初始化UART1模块
-	Led_Init();										// 初始化LED模块
-	Exti_Init();									// 初始化外部中断
-	Delay_Init();									// 初始化延时模块
+	/* 系统初始化 */
+	Sys_Init();
 	
-	// Timer3_Init(399, 3599, 1);	  // 初始化TIM3模块(PWM)
+	/* IAP升级处理 */
+	Update_Process();
 	
-	while (1) {
+//	/* BOOT跳转处理 */
+//	Boot_Process();
+	
+	if(((*(vu32*)(0x08002000+4))&0xFF000000)==0x08000000){
 		
-		Led_Set(1);
-		Delay_Us(500);
-		Led_Set(0);
-		Delay_Us(500);
+		app_main = (App_Fun_t)*(vu32*)(0x08002004);
+		/* 设置应用程序的堆栈 */
+	  MSR_MSP(*(vu32*)(0x08002000));
+		/* 跳转到应用程序执行 */
+		Uart1_Send("Enter APP1");
+		
+		/* 关闭总中断 */
+		__set_PRIMASK(1);
+		
+		Delay_Ms(10);
+		
+	  app_main();
+	}else{
+		Uart1_Send("Bootloader Error");
 	}
+	
+	/* 防止程序跑飞 */
+	while (1);
 }
 

@@ -5,17 +5,26 @@
 * @include
 **/
 #include "stm32f10x.h"
+#include "led.h"
+#include "nvic.h"
+#include "uart.h"
+#include "exti.h"
+#include "timer.h"
+#include "delay.h"
 
 
 /**
 * @typedef
 **/
-typedef void (*Goto_App)(void);
+
+
 
 
 /**
 * @function
 **/
+void Sys_Init(void);
+
 void MSR_MSP(u32 addr);
 
 void Sys_SoftReset(void);

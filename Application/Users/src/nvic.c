@@ -5,6 +5,11 @@
 // 配置NVIC，对中断分组等等
 void Nvic_Init(int Group) {
 	
+	/* 设置中断向量表偏移 */
+	SCB->VTOR = (FLASH_BASE | 0x2000);
+	
+	__set_PRIMASK(0);    //开启总中断
+	
 	/* 对NVIC分组 */
 	uint32_t GroupDefaultValue;
 	

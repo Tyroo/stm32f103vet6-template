@@ -1,6 +1,6 @@
 /* Flash操作模块（未验证） */
 /*************************************************************
-*		BootLoader	*		Download	 *	 Programs   *		Standby		 *
+*		BootLoader	*		APP1	 *	 APP2   *		Parameter		 *
 **************************************************************/
 #include "flash.h"
 
@@ -18,10 +18,10 @@ void Flash_Init() {
 // 向指定地址写入数据
 void Flash_Write(u32 Addr, u16 *Data, u16 DataSize) {
 	
-  u16 ErasePageNum = (DataSize / (Flash_Configure.PAGE_SIZE/16));
-	u16 ErasePageStart = (Addr - Flash_Configure.START_ADDR) / (Flash_Configure.PAGE_SIZE/8);
+  u16 ErasePageNum = DataSize / 1024;
+	u16 ErasePageStart = (Addr - Flash_Configure.START_ADDR) / Flash_Configure.PAGE_SIZE;
 	
-	if (DataSize / (Flash_Configure.PAGE_SIZE/16) - ErasePageNum) ErasePageNum += 1;
+	if (DataSize%1024) ErasePageNum += 1;
 	
   // 输入地址合法性校验
   if (Addr<Flash_Configure.START_ADDR ||
