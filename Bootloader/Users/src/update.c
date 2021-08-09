@@ -1,13 +1,14 @@
 #include "update.h"
 
 
+// 检测并处理更新，实现在线升级
 void Update_Process() {
 
 	// 判断Flash中的更新参数是否被置1
 	volatile u16 UpdateFlag = Flash_Read(UPDATE_FLAG_ADDR);
 	
-	// 当UpdateFlag被置1时，表示需要更新
-	if (UpdateFlag&1) {
+	// 当UpdateFlag被置0时，表示需要更新，为全F或者1时不需要更新
+	if (UpdateFlag == 0) {
 		
 		// 倒计时等待更新的到来
 		Update_CountDown();
@@ -17,15 +18,15 @@ void Update_Process() {
 			
 			while(!IsDownload);	// 等待更新程序下载完成
 			
-			// 下载完成后，清除Flash中的UpdateFlag
-			Flash_Write(UPDATE_FLAG_ADDR, 0, 1);
+			// 下载完成后，将UpdateFlag置1
+			Flash_Write(UPDATE_FLAG_ADDR, (u16 *)1, 1);
 		}
 	} 
 }
 
 
 // 倒计时UPDATE_TIMEOUT秒等待开始更新
-void Update_CountDown() {
+static void Update_CountDown() {
 	
 	u8 UpdateTimeout = UPDATE_TIMEOUT;
 	
@@ -34,7 +35,7 @@ void Update_CountDown() {
 		
 		if (Timer2_Flag == 1) {
 			Timer2_Flag = 0;
-			Uart1_Send("Plase download update pack...");
+			Uart1_Send("Please download update pack!");
 			UpdateTimeout --;
 		}
 	}

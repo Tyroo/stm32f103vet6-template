@@ -5,7 +5,8 @@
 
 
 // USART1接收的数据
-char UsartReceiveData[100];
+u16 UsartReceiveDataOne[100];
+u16 UsartReceiveDataTwo[100];
 
 // 是否处在下载标志
 u8 IsDownload = 0;
@@ -82,7 +83,7 @@ void USART1_IRQHandler() {
 
 		UsartReceiveData[DataBit++] = RxData;			// 将数据存入接收字符串中
 		
-		IsDownload = 1;	// 指示有数据开始下载进来
+		IsDownload = 1;														// 指示有数据开始下载进来
 		
 		// 当接收的数据遇到结尾字符时终止接收
 		if (RxData == '\n') {

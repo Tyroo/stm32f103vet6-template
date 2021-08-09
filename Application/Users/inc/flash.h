@@ -50,7 +50,7 @@ void Flash_Erase(u32 StartPageAddr, u16 PageNum);
 * 参数：{ *Addr：数据地址指针 }
 * 返回值：void
 **/
-vu16 Flash_Read(u32 *Addr);
+vu16 Flash_Read(u32 Addr);
 
 
 

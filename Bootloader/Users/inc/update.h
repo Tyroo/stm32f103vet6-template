@@ -8,11 +8,12 @@
 
 #define UPDATE_FLAG_ADDR 0x8072000	// 0x8072000~0x80727FF
 
-#define UPDATE_TIMEOUT 20
+#define UPDATE_TIMEOUT 5
 
 
 void Update_Process(void);
-void Update_CountDown(void);
+
+static void Update_CountDown(void);
 
 #endif
 

@@ -613,19 +613,9 @@
               <FilePath>..\Users\src\dma.c</FilePath>
             </File>
             <File>
-              <FileName>exti.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Users\src\exti.c</FilePath>
-            </File>
-            <File>
               <FileName>flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Users\src\flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Users\src\i2c.c</FilePath>
             </File>
             <File>
               <FileName>led.c</FileName>
@@ -646,11 +636,6 @@
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Users\src\uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>wdg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Users\src\wdg.c</FilePath>
             </File>
             <File>
               <FileName>sys.c</FileName>

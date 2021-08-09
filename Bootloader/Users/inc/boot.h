@@ -2,6 +2,7 @@
 #define __BOOT_H__
 
 
+#include <stdio.h>
 #include "stm32f10x.h"
 #include "sys.h"
 #include  "flash.h"
@@ -31,7 +32,7 @@
 #define APP2_CAPACITY 224
 #define PARAM_CAPACITY 56
 
-#define APP_GOTO_FLAG_START_ADDR 0x8072800 // 0x8072800~0x8072FFF
+#define APP_GOTO_FLAG_START_ADDR (u32)0x8072800 // Ìø×ª±êÖ¾0x8072800~0x8072FFF
 
 
 
@@ -42,6 +43,6 @@ typedef void (*Goto_App)(void);
 
 void Boot_Process(void);
 
-void Boot_GotoApp(u32 AppStartAddr);
+static void Boot_GotoApp(u32 AppStartAddr);
 
 #endif

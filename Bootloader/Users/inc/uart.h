@@ -11,7 +11,9 @@
 /**
 * @variable
 **/
-extern char UsartReceiveData[100];
+extern u16 UsartReceiveDataOne[100];
+extern u16 UsartReceiveDataTwo[100];
+
 
 extern u8 IsDownload;
 

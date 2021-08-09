@@ -11,6 +11,7 @@
 #include "exti.h"
 #include "timer.h"
 #include "delay.h"
+#include "flash.h"
 
 
 /**
