@@ -20,7 +20,7 @@ static void Boot_GotoApp(u32 AppStartAddr) {
 	
 	MSR_MSP(*(vu32*)AppStartAddr);	// 设置栈顶地址
 	
-	__set_PRIMASK(1);   //关闭STM32总中断
+	__set_PRIMASK(1);			// 关闭STM32总中断
 	
 	Delay_Ms(10);				// 延时
 	

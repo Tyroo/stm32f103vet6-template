@@ -22,7 +22,7 @@ void Spi1_Init() {
 
 	/* 配置SPI1 */
 	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;	// 设置为2线双向全双工模式
-	SPI_InitStructure.SPI_Mode = SPI_Mode_Slave;												// 设置为主机
+	SPI_InitStructure.SPI_Mode = SPI_Mode_Slave;												// 设置为从机
 	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;// 设置SPI传输速率（速率=72MHz/v）
 	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;										// SPI单次传输的数据量
 	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;												// 在时钟的第二次跳变沿采集数据

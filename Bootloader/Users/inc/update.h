@@ -5,8 +5,7 @@
 #include "flash.h"
 #include "uart.h"
 #include "timer.h"
-
-#define UPDATE_FLAG_ADDR 0x8072000	// 0x8072000~0x80727FF
+#include "boot.h"
 
 #define UPDATE_TIMEOUT 5
 

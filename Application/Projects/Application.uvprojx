@@ -623,6 +623,16 @@
               <FileType>5</FileType>
               <FilePath>..\Users\inc\dac.h</FilePath>
             </File>
+            <File>
+              <FileName>can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Users\src\can.c</FilePath>
+            </File>
+            <File>
+              <FileName>can.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Users\inc\can.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

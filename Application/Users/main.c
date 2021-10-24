@@ -10,6 +10,7 @@
 #include "adc.h"
 #include "dac.h"
 #include "spi.h"
+#include "can.h"
 
 
 
@@ -18,7 +19,8 @@ int main() {
 	
 	/* 变量定义 */
 //	uint8_t ADC1ChanneArray[1] = { 0x01 };
-	uint8_t  LedStatus;
+//	uint8_t  LedStatus;
+	CanTxMsg CANTxMessage;
 	
 	/* 初始化模块配置 */
 	Nvic_Init(2);									// 初始化NVIC模块，中断分组2
@@ -28,7 +30,15 @@ int main() {
 	Delay_Init();									// 初始化延时模块
 	Spi1_Init();									// 初始化SPI1模块
 	Timer2_Init(9999, 7199, 1);		// 初始化TIM2模块
+	CAN1_Config();								// CAN1初始化，波特率500KHz
 	
+	
+	CANTxMessage.DLC = 2;					// 数据长度
+	CANTxMessage.Data[0] = 0x01;	// 数据低位
+	CANTxMessage.Data[1] = 0x02;	// 数据高位
+	CANTxMessage.IDE = 0;					// 标注标识符模式
+	CANTxMessage.ExtId = 0;				// 扩展标识符为0
+	CANTxMessage.RTR = 0;					// 数据帧
 //	// 初始化ADC1通道16
 //	Adc1_Init(DISABLE, DISABLE, ADC1ChanneArray, 1);
 //	// 开启ADC1的通道16的转换
@@ -56,11 +66,9 @@ int main() {
 //			// 开启ADC1的通道16的转换
 //			ADC_SoftwareStartConvCmd(ADC1, ENABLE);	
 //		}
-		
+
 		if (Timer2_Flag&1) {
-			LedStatus = GPIO_ReadOutputDataBit(GPIOC, GPIO_Pin_7);
-			Led_Set(~LedStatus);
-			Timer2_Flag = 0;
+			CAN1_Send_Msg(&CANTxMessage);
 		}
 	}
 }

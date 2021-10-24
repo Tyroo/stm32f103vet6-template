@@ -81,13 +81,13 @@ void USART1_IRQHandler() {
 		
 		RxData = USART_ReceiveData(USART1);				// 获取接收到的数据
 
-		UsartReceiveData[DataBit++] = RxData;			// 将数据存入接收字符串中
+		UsartReceiveDataTwo[DataBit++] = RxData;			// 将数据存入接收字符串中
 		
 		IsDownload = 1;														// 指示有数据开始下载进来
 		
 		// 当接收的数据遇到结尾字符时终止接收
 		if (RxData == '\n') {
-			UsartReceiveData[DataBit] = '\0';
+			UsartReceiveDataTwo[DataBit] = '\0';
 			DataBit = 0;														// 清除接收位
 			IsDownload = 0;													// 清除下载中标志位
 			return;																	// 退出中断函数
